@@ -60,9 +60,9 @@ def codificar():
 			rgb.append(format(f[x, 0, 2], 'b'))
 
 		x += 1
-
+	print("----------------------------------------------------------------------------------------------------------------------")
 	print("RGB: ",rgb)
-
+	print("----------------------------------------------------------------------------------------------------------------------")
 	k = l = 0
 	for i in range(0, len(rgb)):
 		rgb2 = ""
@@ -78,7 +78,9 @@ def codificar():
 
 		rgb[i] = rgb2
 
-	print("RGB: ",rgb)
+	print("----------------------------------------------------------------------------------------------------------------------")
+	print("RGB Altearado: ",rgb)
+	print("----------------------------------------------------------------------------------------------------------------------")
 
 	for x in range(0, len(rgb)):
 		RGB.append(int(rgb[x], 2))
@@ -89,18 +91,19 @@ def codificar():
 	if((len(RGB)%3) == 0):
 		for x in range(0, len(RGB), 3):
 			f[0:1 , j:i, [0, 1, 2]] = RGB[x], RGB[x+1], RGB[x+2]
+			print(RGB[x], RGB[x+1], RGB[x+2])
 			j += 1
 			i += 1
 	else:
 		for x in range(0, len(RGB), 3):
 			if(x+2 < len(RGB)):
 				f[0:1 , j:i, [0, 1, 2]] = RGB[x], RGB[x+1], RGB[x+2]
+				print(RGB[x], RGB[x+1], RGB[x+2])
 			else:
 				f[0:1 , j:i, [0]] = RGB[x]
+				print(RGB[x])
 			j += 1
 			i += 1
-
-	print(RGB)
 
 	img.imwrite('imagem_saida.png', f)
 	plt.imshow(f)

@@ -5,8 +5,10 @@ import matplotlib.pyplot as plt
 #----------------------------------------------------------------------------------------------------------------------
 #Função que abre o aquivo texto_entrada.txt e pega o Ascii de cada caractere e tranforma em seu respectivo binário(Bin)
 #----------------------------------------------------------------------------------------------------------------------
+
 def pegaFrase():
-	BitsP = 0
+	bitsP = 0
+	global Bin
 	Bin = list()
 	Ascii = list()
 	frase = ""
@@ -21,11 +23,10 @@ def pegaFrase():
 	for x in range(len(frase)):
 		Ascii.append(ord(frase[x]))
 		Bin.append(format(Ascii[x], 'b'))
-		BitsP += len(Bin[x])
+		bitsP += len(Bin[x])
 
 	texto_entrada.close()
-	
-	return Bin, BitsP
+	return Bin, bitsP
 #----------------------------------------------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------------------------------------------
@@ -33,6 +34,7 @@ def pegaFrase():
 #pixels da imagem e salva a mesma como 'imagem_saida.png'
 #----------------------------------------------------------------------------------------------------------------------
 def codificar():
+	global BitsP
 	sizeIm = 0
 	BitsP = 0
 
@@ -54,10 +56,10 @@ def codificar():
 	x = 0
 	
 	while(len(rgb) < BitsP):
-		rgb.append(format(f[x, 0, 0], 'b'))
+		rgb.append(format(f[0, x, 0], 'b'))
 		if(len(rgb) < BitsP):
-			rgb.append(format(f[x, 0, 1], 'b'))
-			rgb.append(format(f[x, 0, 2], 'b'))
+			rgb.append(format(f[0, x, 1], 'b'))
+			rgb.append(format(f[0, x, 2], 'b'))
 
 		x += 1
 	print("----------------------------------------------------------------------------------------------------------------------")
@@ -106,13 +108,68 @@ def codificar():
 			i += 1
 
 	img.imwrite('imagem_saida.png', f)
-	plt.imshow(f)
+#----------------------------------------------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------------------------------------------
+#Decodificar
+#----------------------------------------------------------------------------------------------------------------------
+def decodificar():
+	fraseB = list()
+	f2 = img.imread('imagem_saida.png')
+
+	x = 0
+	while(len(fraseB) < BitsP):
+		fraseB.append(format(f2[0, x, 0], 'b'))
+		if(len(fraseB) < BitsP):
+			fraseB.append(format(f2[0, x, 1], 'b'))
+			fraseB.append(format(f2[0, x, 2], 'b'))
+
+		x += 1
+
+	frases = list()
+	frase = ""
+	aux = 0
+	aux2 = len(Bin[aux])-1
+
+	for i in range(0, len(fraseB)):
+		if(aux2 < i):
+			print(frase)
+			frases.append(frase)
+			frase = ""
+			aux += 1
+			
+			if(aux < len(Bin)):
+				aux2 = aux2 + len(Bin[aux])
+				
+			
+		for j in range(0, len(fraseB[i])):
+			if(j == len(fraseB[i])-1):
+				frase += fraseB[i][j]
+	
+	if(len(frase) > 1):
+		frases.append(frase)
+	
+	frase = ""
+
+	print(Bin)
+	print(len(Bin))
+	print(frases)
+	print(len(frases))
+
+	for x in range(0, len(frases)):
+		frases[x] = int(frases[x], 2)
+		frase += chr(frases[x])
+	
+	print(frases)
+	arquivo = open('texto_saida.txt', 'w')
+	arquivo.write(frase)
+	arquivo.close()
+
+	plt.imshow(f2)
 	plt.show()
 #----------------------------------------------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------------------------------------------
-#Apenas chama as funções necessárias
-#----------------------------------------------------------------------------------------------------------------------
 codificar()
+decodificar()
 #----------------------------------------------------------------------------------------------------------------------
-

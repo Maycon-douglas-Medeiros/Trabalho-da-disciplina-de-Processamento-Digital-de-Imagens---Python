@@ -1,2 +1,3 @@
 # Trabalho1PDI
-teste
+
+Trabalho da Disciplina de Processamento Digital de Imagens
